@@ -5,7 +5,6 @@
 -export([init/1, handle_info/2, handle_cast/2, handle_call/3]).
 
 -define(SERVER, ?MODULE).
-
 -record(state, {redis, queue, primes}).
 
 start_link(RedisHost, RedisPort, RedisDB, QueueKey, ResultSetKey) ->

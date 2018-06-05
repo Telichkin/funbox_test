@@ -21,9 +21,9 @@ init([MaxN, StoreModule]) ->
               s_mod = StoreModule,
               max_n = MaxN}}.
 
-handle_info(generate, #state{} = S) ->
+handle_info(generate, #state{s_mod = Store} = S) ->
   TimerRef = continue_periodic_message(generate, ?DELAY_MS, S#state.start_t, S#state.t_ref),
 
   RandomNumbers = [rand:uniform(S#state.max_n - 1) + 1 || _ <- lists:seq(1, ?NUM_IN_MS * ?DELAY_MS)],
-  apply(S#state.s_mod, push_numbers, [RandomNumbers]),
+  Store:push_numbers(RandomNumbers),
   {noreply, S#state{t_ref = TimerRef}}.

@@ -19,11 +19,11 @@ init([MaxN, StoreModule]) ->
               s_mod = StoreModule,
               primes = primes(lists:seq(2, MaxN))}}.
 
-handle_info(filter, #state{} = S) ->
+handle_info(filter, #state{s_mod = Store} = S) ->
   TimerRef = continue_periodic_message(filter, ?DELAY_MS, S#state.start_t, S#state.t_ref),
 
-  NumToFilter = apply(S#state.s_mod, pop_all, []),
-  apply(S#state.s_mod, save_primes, [[N || N <- NumToFilter, lists:member(N, S#state.primes)]]),
+  NumToFilter = Store:pop_all(),
+  Store:save_primes([N || N <- NumToFilter, lists:member(N, S#state.primes)]),
   {noreply, S#state{t_ref = TimerRef}}.
 
 primes([]) -> [];
